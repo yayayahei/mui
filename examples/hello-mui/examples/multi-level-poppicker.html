@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>Multi-Level-PopPicker</title>
+    <link rel="stylesheet" href="../css/mui.min.css">
+    <link rel="stylesheet" href="../css/mui.picker.all.css">
+
+    <script src="../js/mui.min.js"></script>
+    <script src="../js/mui.picker.all.js"></script>
+
+</head>
+<body>
+
+<script>
+
+    (function ($, doc) {
+        $.init();
+        $.ready(function () {
+            $.getJSON("../js/data.json", function (data) {
+                var city_picker = new $.MultiLevelPopPicker({layer: 3});
+                city_picker.setData(data.d);
+                city_picker.show(function (items) {
+                    if ((items[0] || {}).text != "" && (items[0] || {}).text != undefined && (items[1] || {}).text != "" && (items[1] || {}).text != undefined && (items[2] || {}).text != "" && (items[2] || {}).text != undefined) {
+                        console.log((items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text);
+                    }
+                });
+            });
+        });
+    })(mui, document);
+</script>
+</body>
+</html>

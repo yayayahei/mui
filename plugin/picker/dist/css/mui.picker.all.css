@@ -166,6 +166,29 @@
 	border: none;
 	float: left;
 }
+
+.mui-poppicker-title {
+	padding: 0 10px;
+}
+
+.mui-poppicker-title h5 {
+	display: inline-block;
+	margin: 0 5px 0 0;
+	line-height: 18px;
+}
+
+.mui-poppicker-title h5.active {
+	/*border-bottom: 2px solid #3636bb;*/
+	border-bottom: 2px solid green;
+}
+
+.mui-poppicker-body .mui-picker {
+	display: none;
+}
+
+.mui-poppicker-body .mui-picker.active {
+	display: block;
+}
 .mui-dtpicker {
 	position: fixed;
 	left: 0px;
