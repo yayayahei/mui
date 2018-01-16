@@ -35,12 +35,10 @@
 		</div>\
 	</div>';
     var titleBuffer = '<h5 data-id="title">请选择</h5>';
-    var pickerBuffer = '<div class="mui-picker">\
-		<div class="mui-picker-inner">\
-			<div class="mui-pciker-rule mui-pciker-rule-ft"></div>\
-			<ul class="mui-pciker-list">\
+    var pickerBuffer = '<div class="mui-ulpicker">\
+		<div class="mui-ulpicker-inner">\
+			<ul class="mui-ulpciker-list">\
 			</ul>\
-			<div class="mui-pciker-rule mui-pciker-rule-bg"></div>\
 		</div>\
 	</div>';
 
@@ -86,6 +84,7 @@
         _createPicker: function () {
             var self = this;
             var layer = self.options.layer || 1;
+            var titleWidthLayer = self.options.titleWidthLayer;
             var width = '100%';
             self.pickers = [];
             self.titles = [];
@@ -96,8 +95,11 @@
                 pickerElement.style.width = width;
                 // append title
                 var titleElement = $.dom(titleBuffer)[0];
-                console.log(titleElement);
+                // console.log(titleElement);
                 titleElement.setAttribute("data-id", i);
+                if(titleWidthLayer){
+                    titleElement.style.width=titleWidthLayer[i-1]+'%';
+                }
                 if (i === 1) {
                     titleElement.classList.add('active');
                     pickerElement.classList.add('active');
@@ -105,8 +107,8 @@
                 titleElement.addEventListener('tap', function (event) {
                     var id = Number(this.getAttribute("data-id"));
                     var index = Number(this.getAttribute("data-value"));
-                  var prevIndex=  this.previousSibling&&Number(this.previousSibling.getAttribute("data-value"));
-                    console.log(prevIndex);
+                    var prevIndex = this.previousSibling && Number(this.previousSibling.getAttribute("data-value"));
+                    // console.log(prevIndex);
                     for (var _id = 0; _id < layer; _id++) {
                         if (_id + 1 === id) {
                             // active this title
@@ -122,27 +124,48 @@
 
                         }
                     }
-                    if(id>1){
-                        self.pickers[id - 1].triggerChange();
-                    }
+                    // if (id > 1) {
+                    //     self.pickers[id - 1].triggerChange();
+                    // }
                 }, false);
                 self.title.appendChild(titleElement);
                 self.titles.push(titleElement);
                 self.pickerElements.push(pickerElement);
                 self.body.appendChild(pickerElement);
-                var picker = $(pickerElement).picker();
+                var picker = $(pickerElement).ulpicker();
                 self.pickers.push(picker);
                 pickerElement.addEventListener('change', function (event) {
+                    // console.log('change event',event);
                     var id = Number(this.getAttribute("data-id"));
-                    console.log(event);
                     var eventData = event.detail || {};
                     var preItem = eventData.item || {};
+
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text;
+                    thisTitleElement.innerText = preItem.text||"请选择";
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
-                    if (nextPickerElement && nextPickerElement.picker) {
-                        nextPickerElement.picker.setItems(preItem.children);
+                    if (nextPickerElement && nextPickerElement.ulpicker) {
+                        nextPickerElement.ulpicker.setItems(preItem.children);
+                        nextPickerElement.ulpicker.setSelectedIndex(-1);
+                        // show next picker
+                        if(eventData.index>-1){
+                            for (var _id = 0; _id < layer; _id++) {
+                                if (_id  === id) {
+                                    // active this title
+                                    self.pickerElements[_id].classList.add('active');
+                                    // display corresponding picker,
+                                    self.titles[_id].classList.add('active');
+
+                                } else {
+                                    // deactive other picker
+                                    self.pickerElements[_id].classList.remove('active');
+                                    // deactive other title
+                                    self.titles[_id].classList.remove('active');
+
+                                }
+                            }
+                        }
+
                     }
                 }, false);
             }
@@ -169,6 +192,7 @@
             self.callback = callback;
             self.mask.show();
             document.body.classList.add($.className('poppicker-active-for-page'));
+            // document.classList.add($.className('poppicker-active-for-page'));
             self.panel.classList.add($.className('active'));
             //处理物理返回键
             self.__back = $.back;
@@ -183,6 +207,7 @@
             self.panel.classList.remove($.className('active'));
             self.mask.close();
             document.body.classList.remove($.className('poppicker-active-for-page'));
+            // document.classList.remove($.className('poppicker-active-for-page'));
             //处理物理返回键
             $.back = self.__back;
         },

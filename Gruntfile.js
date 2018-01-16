@@ -141,7 +141,7 @@ module.exports = function (grunt) {
             plugin: {
                 expand: true,
                 cwd: '<%= meta.pluginPickerDistPath %>',
-                src: ['**/mui*'],
+                src: ['**/**'],
                 dest: '<%= meta.examplesPath %>'
             }
         },

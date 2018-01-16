@@ -48,11 +48,15 @@ gulp.task('build', ["clear_picker"], function () {
         .pipe(rename("mui.picker.min.css"))
         .pipe(header(picker_banner))
         .pipe(gulp.dest("./dist/css/"));
+    //img
+    gulp.src(["./img/**"])
+        .pipe(gulp.dest("./dist/img/"));
     //js
     gulp.src(["./js/mui.picker.js",
+        "./js/mui.ulpicker.js",
         "./js/mui.poppicker.js",
         "./js/mui.dtpicker.js",
-        "./js/mui.multi-level-poppicker.js"
+        "./js/mui.multi-level-poppicker.js",
     ])
         .pipe(concat("mui.picker.all.js"))
         //.pipe(header(picker_banner))
