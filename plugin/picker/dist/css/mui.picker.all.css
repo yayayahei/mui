@@ -228,12 +228,12 @@
 	background-size: 100% 100%;
 }
 
-.mui-poppicker-active-for-page,html{
+.mui-poppicker-active-for-page{
 	overflow-y: hidden;
-	-ms-overflow-y: hidden;
-	-webkit-backface-visibility: hidden;
-	-moz-backface-visibility: hidden;
-	z-index: 0;
+	/*-ms-overflow-y: hidden;*/
+	/*-webkit-backface-visibility: hidden;*/
+	/*-moz-backface-visibility: hidden;*/
+	/*z-index: 0;*/
 	position: relative;
 }
 

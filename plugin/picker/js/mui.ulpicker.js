@@ -128,43 +128,52 @@
         var lastAngle = 0;
         var startY = null;
         var isPicking = false;
-        // self.holder.addEventListener($.EVENT_START, function(event) {
-        //     isPicking = true;
-        //     event.preventDefault();
-        //     self.list.style.webkitTransition = '';
-        //     startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-        //     lastAngle = self.list.angle;
-        //     self.updateInertiaParams(event, true);
-        // }, false);
-        // self.holder.addEventListener($.EVENT_END, function(event) {
-        //     isPicking = false;
-        //     event.preventDefault();
-        //     self.startInertiaScroll(event);
-        // }, false);
-        // self.holder.addEventListener($.EVENT_CANCEL, function(event) {
-        //     isPicking = false;
-        //     event.preventDefault();
-        //     self.startInertiaScroll(event);
-        // }, false);
-        // self.holder.addEventListener($.EVENT_MOVE, function(event) {
-        //     if (!isPicking) {
-        //         return;
-        //     }
-        //     event.preventDefault();
-        //     var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-        //     var dragRange = endY - startY;
-        //     var dragAngle = self.calcAngle(dragRange);
-        //     var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
-        //     if (newAngle > self.endExceed) {
-        //         newAngle = self.endExceed
-        //     }
-        //     if (newAngle < self.beginExceed) {
-        //         newAngle = self.beginExceed
-        //     }
-        //     self.setAngle(newAngle);
-        //     self.updateInertiaParams(event);
-        // }, false);
-        //--
+        self.holder.addEventListener($.EVENT_START, function(event) {
+            console.log($.EVENT_START,event);
+            isPicking = true;
+            event.preventDefault();
+            self.list.style.webkitTransition = '';
+            startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            lastAngle = self.list.angle;
+            self.updateInertiaParams(event, true);
+        }, false);
+        self.holder.addEventListener($.EVENT_END, function(event) {
+            console.log($.EVENT_END,event);
+
+            isPicking = false;
+            event.preventDefault();
+            self.startInertiaScroll(event);
+        }, false);
+        self.holder.addEventListener($.EVENT_CANCEL, function(event) {
+            console.log($.EVENT_CANCEL,event);
+            isPicking = false;
+            event.preventDefault();
+            self.startInertiaScroll(event);
+        }, false);
+        self.holder.addEventListener($.EVENT_MOVE, function(event) {
+            console.log($.EVENT_MOVE, event);
+            if (!isPicking) {
+                return;
+            }
+            event.preventDefault();
+            var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            var dragRange = endY - startY;
+            console.log(endY,  self.lastMoveStart);
+            self.list.scrollTop-=endY - self.lastMoveStart;
+
+            var dragAngle = self.calcAngle(dragRange);
+
+            var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
+            if (newAngle > self.endExceed) {
+                newAngle = self.endExceed
+            }
+            if (newAngle < self.beginExceed) {
+                newAngle = self.beginExceed
+            }
+            self.setAngle(newAngle);
+            self.updateInertiaParams(event);
+        }, false);
+        // --
         self.list.addEventListener('tap', function (event) {
             elementItem = event.target;
             // console.log(event.path[1].tagName);
@@ -206,10 +215,10 @@
             self.startAngle = self.list.angle;
         } else {
             var nowTime = event.timeStamp || Date.now();
-            if (nowTime - self.lastMoveTime > 300) {
+            // if (nowTime - self.lastMoveTime > 300) {
                 self.lastMoveTime = nowTime;
                 self.lastMoveStart = point.pageY;
-            }
+            // }
         }
         self.stopInertiaMove = true;
     };
@@ -223,9 +232,11 @@
         var nowTime = event.timeStamp || Date.now();
         var v = (point.pageY - self.lastMoveStart) / (nowTime - self.lastMoveTime); //最后一段时间手指划动速度
         var dir = v > 0 ? -1 : 1; //加速度方向
-        var deceleration = dir * 0.0006 * -1;
+        var deceleration = dir * 0.2 * -1;
         var duration = Math.abs(v / deceleration); // 速度消减至0所需时间
         var dist = v * duration / 2; //最终移动多少
+        self.list.scrollTop-=dist;
+
         var startAngle = self.list.angle;
         var distAngle = self.calcAngle(dist) * dir;
         //----
@@ -245,7 +256,6 @@
         }
         self.scrollDistAngle(nowTime, startAngle, distAngle, duration);
     };
-
     ULPicker.prototype.scrollDistAngle = function (nowTime, startAngle, distAngle, duration) {
         var self = this;
         self.stopInertiaMove = false;
@@ -266,6 +276,7 @@
             })();
         })(nowTime, startAngle, distAngle, duration);
     };
+
 
     ULPicker.prototype.quartEaseOut = function (t, b, c, d) {
         return -c * ((t = t / d - 1) * t * t * t - 1) + b;
