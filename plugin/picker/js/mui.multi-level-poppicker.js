@@ -37,7 +37,7 @@
     var titleBuffer = '<h5 data-id="title">请选择</h5>';
     var pickerBuffer = '<div class="mui-ulpicker">\
 		<div class="mui-ulpicker-inner">\
-			<ul class="mui-ulpciker-list">\
+			<ul class="mui-ulpicker-list">\
 			</ul>\
 		</div>\
 	</div>';
@@ -74,11 +74,24 @@
             }, false);
             self._createPicker();
             //防止滚动穿透
-            self.panel.addEventListener($.EVENT_START, function (event) {
-                event.preventDefault();
-            }, false);
+            // self.panel.addEventListener($.EVENT_START, function (event) {
+            //     event.preventDefault();
+            // }, false);
             self.panel.addEventListener($.EVENT_MOVE, function (event) {
-                event.preventDefault();
+                // 如果event puath 不包含pop picker body 则阻止
+                console.log('move in panel', event);
+                var bodyTags = event.path.some(function (value, index) {
+                    try {
+                        return value.classList.contains('mui-poppicker-body');
+                    } catch (e) {
+                        return false;
+                    }
+
+                });
+                if (!bodyTags) {
+                    event.preventDefault();
+                }
+
             }, false);
         },
         _createPicker: function () {
@@ -97,8 +110,8 @@
                 var titleElement = $.dom(titleBuffer)[0];
                 // console.log(titleElement);
                 titleElement.setAttribute("data-id", i);
-                if(titleWidthLayer){
-                    titleElement.style.width=titleWidthLayer[i-1]+'%';
+                if (titleWidthLayer) {
+                    titleElement.style.width = titleWidthLayer[i - 1] + '%';
                 }
                 if (i === 1) {
                     titleElement.classList.add('active');
@@ -141,16 +154,16 @@
                     var preItem = eventData.item || {};
 
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text||"请选择";
+                    thisTitleElement.innerText = preItem.text || "请选择";
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
                     if (nextPickerElement && nextPickerElement.ulpicker) {
                         nextPickerElement.ulpicker.setItems(preItem.children);
                         nextPickerElement.ulpicker.setSelectedIndex(-1);
                         // show next picker
-                        if(eventData.index>-1){
+                        if (eventData.index > -1) {
                             for (var _id = 0; _id < layer; _id++) {
-                                if (_id  === id) {
+                                if (_id === id) {
                                     // active this title
                                     self.pickerElements[_id].classList.add('active');
                                     // display corresponding picker,

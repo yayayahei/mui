@@ -130,48 +130,57 @@
         var isPicking = false;
         self.holder.addEventListener($.EVENT_START, function(event) {
             console.log($.EVENT_START,event);
-            isPicking = true;
-            event.preventDefault();
-            self.list.style.webkitTransition = '';
+            // isPicking = true;
+            // event.preventDefault();
+            // self.list.style.webkitTransition = '';
             startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-            lastAngle = self.list.angle;
-            self.updateInertiaParams(event, true);
+            // lastAngle = self.list.angle;
+            // self.updateInertiaParams(event, true);
         }, false);
         self.holder.addEventListener($.EVENT_END, function(event) {
             console.log($.EVENT_END,event);
-
-            isPicking = false;
+            // isPicking = false;
             event.preventDefault();
-            self.startInertiaScroll(event);
+            // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_CANCEL, function(event) {
-            console.log($.EVENT_CANCEL,event);
-            isPicking = false;
-            event.preventDefault();
-            self.startInertiaScroll(event);
+            // console.log($.EVENT_CANCEL,event);
+            // isPicking = false;
+            // event.preventDefault();
+            // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_MOVE, function(event) {
-            console.log($.EVENT_MOVE, event);
-            if (!isPicking) {
-                return;
-            }
-            event.preventDefault();
+            // console.log($.EVENT_MOVE, event);
+            // if (!isPicking) {
+            //     return;
+            // }
+            console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
+
             var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
             var dragRange = endY - startY;
-            console.log(endY,  self.lastMoveStart);
-            self.list.scrollTop-=endY - self.lastMoveStart;
-
-            var dragAngle = self.calcAngle(dragRange);
-
-            var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
-            if (newAngle > self.endExceed) {
-                newAngle = self.endExceed
+            if(self.list.scrollTop===0&&dragRange>0){
+                console.log('prevent default');
+                event.preventDefault();
+            }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
+                console.log('prevent default');
+                event.preventDefault();
             }
-            if (newAngle < self.beginExceed) {
-                newAngle = self.beginExceed
-            }
-            self.setAngle(newAngle);
-            self.updateInertiaParams(event);
+            // event.preventDefault();
+
+            // console.log(endY,  self.lastMoveStart);
+            // self.list.scrollTop-=endY - self.lastMoveStart;
+            //
+            // var dragAngle = self.calcAngle(dragRange);
+            //
+            // var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
+            // if (newAngle > self.endExceed) {
+            //     newAngle = self.endExceed
+            // }
+            // if (newAngle < self.beginExceed) {
+            //     newAngle = self.beginExceed
+            // }
+            // self.setAngle(newAngle);
+            // self.updateInertiaParams(event);
         }, false);
         // --
         self.list.addEventListener('tap', function (event) {

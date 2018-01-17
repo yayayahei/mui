@@ -519,48 +519,57 @@
         var isPicking = false;
         self.holder.addEventListener($.EVENT_START, function(event) {
             console.log($.EVENT_START,event);
-            isPicking = true;
-            event.preventDefault();
-            self.list.style.webkitTransition = '';
+            // isPicking = true;
+            // event.preventDefault();
+            // self.list.style.webkitTransition = '';
             startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-            lastAngle = self.list.angle;
-            self.updateInertiaParams(event, true);
+            // lastAngle = self.list.angle;
+            // self.updateInertiaParams(event, true);
         }, false);
         self.holder.addEventListener($.EVENT_END, function(event) {
             console.log($.EVENT_END,event);
-
-            isPicking = false;
+            // isPicking = false;
             event.preventDefault();
-            self.startInertiaScroll(event);
+            // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_CANCEL, function(event) {
-            console.log($.EVENT_CANCEL,event);
-            isPicking = false;
-            event.preventDefault();
-            self.startInertiaScroll(event);
+            // console.log($.EVENT_CANCEL,event);
+            // isPicking = false;
+            // event.preventDefault();
+            // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_MOVE, function(event) {
-            console.log($.EVENT_MOVE, event);
-            if (!isPicking) {
-                return;
-            }
-            event.preventDefault();
+            // console.log($.EVENT_MOVE, event);
+            // if (!isPicking) {
+            //     return;
+            // }
+            console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
+
             var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
             var dragRange = endY - startY;
-            console.log(endY,  self.lastMoveStart);
-            self.list.scrollTop-=endY - self.lastMoveStart;
-
-            var dragAngle = self.calcAngle(dragRange);
-
-            var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
-            if (newAngle > self.endExceed) {
-                newAngle = self.endExceed
+            if(self.list.scrollTop===0&&dragRange>0){
+                console.log('prevent default');
+                event.preventDefault();
+            }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
+                console.log('prevent default');
+                event.preventDefault();
             }
-            if (newAngle < self.beginExceed) {
-                newAngle = self.beginExceed
-            }
-            self.setAngle(newAngle);
-            self.updateInertiaParams(event);
+            // event.preventDefault();
+
+            // console.log(endY,  self.lastMoveStart);
+            // self.list.scrollTop-=endY - self.lastMoveStart;
+            //
+            // var dragAngle = self.calcAngle(dragRange);
+            //
+            // var newAngle = dragRange > 0 ? lastAngle - dragAngle : lastAngle + dragAngle;
+            // if (newAngle > self.endExceed) {
+            //     newAngle = self.endExceed
+            // }
+            // if (newAngle < self.beginExceed) {
+            //     newAngle = self.beginExceed
+            // }
+            // self.setAngle(newAngle);
+            // self.updateInertiaParams(event);
         }, false);
         // --
         self.list.addEventListener('tap', function (event) {
@@ -1476,7 +1485,7 @@
     var titleBuffer = '<h5 data-id="title">请选择</h5>';
     var pickerBuffer = '<div class="mui-ulpicker">\
 		<div class="mui-ulpicker-inner">\
-			<ul class="mui-ulpciker-list">\
+			<ul class="mui-ulpicker-list">\
 			</ul>\
 		</div>\
 	</div>';
@@ -1513,11 +1522,24 @@
             }, false);
             self._createPicker();
             //防止滚动穿透
-            self.panel.addEventListener($.EVENT_START, function (event) {
-                event.preventDefault();
-            }, false);
+            // self.panel.addEventListener($.EVENT_START, function (event) {
+            //     event.preventDefault();
+            // }, false);
             self.panel.addEventListener($.EVENT_MOVE, function (event) {
-                event.preventDefault();
+                // 如果event puath 不包含pop picker body 则阻止
+                console.log('move in panel', event);
+                var bodyTags = event.path.some(function (value, index) {
+                    try {
+                        return value.classList.contains('mui-poppicker-body');
+                    } catch (e) {
+                        return false;
+                    }
+
+                });
+                if (!bodyTags) {
+                    event.preventDefault();
+                }
+
             }, false);
         },
         _createPicker: function () {
@@ -1536,8 +1558,8 @@
                 var titleElement = $.dom(titleBuffer)[0];
                 // console.log(titleElement);
                 titleElement.setAttribute("data-id", i);
-                if(titleWidthLayer){
-                    titleElement.style.width=titleWidthLayer[i-1]+'%';
+                if (titleWidthLayer) {
+                    titleElement.style.width = titleWidthLayer[i - 1] + '%';
                 }
                 if (i === 1) {
                     titleElement.classList.add('active');
@@ -1580,16 +1602,16 @@
                     var preItem = eventData.item || {};
 
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text||"请选择";
+                    thisTitleElement.innerText = preItem.text || "请选择";
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
                     if (nextPickerElement && nextPickerElement.ulpicker) {
                         nextPickerElement.ulpicker.setItems(preItem.children);
                         nextPickerElement.ulpicker.setSelectedIndex(-1);
                         // show next picker
-                        if(eventData.index>-1){
+                        if (eventData.index > -1) {
                             for (var _id = 0; _id < layer; _id++) {
-                                if (_id  === id) {
+                                if (_id === id) {
                                     // active this title
                                     self.pickerElements[_id].classList.add('active');
                                     // display corresponding picker,
