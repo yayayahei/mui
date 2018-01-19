@@ -246,7 +246,24 @@
     /*height: 100%;*/
     /*overflow: hidden;*/
 }
+.mui-poppicker-header {
+    text-align: center;
+}
 
+.mui-poppicker-btn-close>span:before{
+    content: '\F00D';
+}
+.mui-poppicker-header {
+    height: 45px;
+    
+}
+.mui-poppicker-btn-close{
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    right: 10px;
+    top: 0px;
+}
 .mui-dtpicker {
 	position: fixed;
 	left: 0px;

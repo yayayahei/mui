@@ -3,7 +3,9 @@
   "version": "1.0.1",
   "description": "Hello-MUI!",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "font-awesome": "^4.7.0"
+  },
   "devDependencies": {
     "del": "^1.2.0",
     "gulp": "^3.9.1",

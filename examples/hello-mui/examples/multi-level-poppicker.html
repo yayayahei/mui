@@ -278,16 +278,15 @@
         $.ready(function () {
 
             $.getJSON("../js/data.json?v=1", function (data) {
-                var city_picker = new $.MultiLevelPopPicker({layer: 3, titleWidthLayer: [20, 20, 55],defaultTitles:['省份','城市','请选择']});
+                var city_picker = new $.MultiLevelPopPicker({panelTitle:'自定义标题',layer: 3, titleWidthLayer: [20, 20, 55],defaultTitles:['省份','城市','请选择']});
                 city_picker.setData(data.d);
-
-                document.getElementById('pop').onclick = function (ev) {
+                // document.getElementById('pop').onclick = function (ev) {
                     city_picker.show(function (items) {
                         if ((items[0] || {}).text != "" && (items[0] || {}).text != undefined && (items[1] || {}).text != "" && (items[1] || {}).text != undefined && (items[2] || {}).text != "" && (items[2] || {}).text != undefined) {
                             console.log((items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text);
                         }
                     });
-                };
+                // };
 
 
             });

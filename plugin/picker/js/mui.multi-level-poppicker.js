@@ -43,9 +43,8 @@
 
     var panelBuffer = '<div class="mui-poppicker">\
 		<div class="mui-poppicker-header">\
-			<button class="mui-btn mui-poppicker-btn-cancel">取消</button>\
-			<button class="mui-btn mui-btn-blue mui-poppicker-btn-ok">确定</button>\
-			<div class="mui-poppicker-clear"></div>\
+		    <div><span class="mui-poppicker-header-text"></span></div>\
+		    <div class="mui-poppicker-btn-close"><span class="" style="font-size:16px;"></span></div>\
 		</div>\
 		<div class="mui-poppicker-title"></div>\
 		<div class="mui-poppicker-body">\
@@ -65,27 +64,27 @@
         init: function (options) {
             var self = this;
             self.options = options || {};
-            self.options.buttons = self.options.buttons || ['取消', '确定'];
+            self.options.panelTitle=self.options.panelTitle||'';
             self.panel = $.dom(panelBuffer)[0];
             document.body.appendChild(self.panel);
-            self.ok = self.panel.querySelector('.mui-poppicker-btn-ok');
-            self.cancel = self.panel.querySelector('.mui-poppicker-btn-cancel');
+            self.headerText = self.panel.querySelector('.mui-poppicker-header-text');
+            self.headerText.innerText = self.options.panelTitle;
+
+            self.close = self.panel.querySelector('.mui-poppicker-btn-close');
             self.title = self.panel.querySelector('.mui-poppicker-title');
             self.body = self.panel.querySelector('.mui-poppicker-body');
             self.mask = $.createMask();
-            self.cancel.innerText = self.options.buttons[0];
-            self.ok.innerText = self.options.buttons[1];
-            self.cancel.addEventListener('tap', function (event) {
+            self.close.addEventListener('tap', function (event) {
                 self.hide();
             }, false);
-            self.ok.addEventListener('tap', function (event) {
-                if (self.callback) {
-                    var rs = self.callback(self.getSelectedItems());
-                    if (rs !== false) {
-                        self.hide();
-                    }
-                }
-            }, false);
+            // self.ok.addEventListener('tap', function (event) {
+            //     if (self.callback) {
+            //         var rs = self.callback(self.getSelectedItems());
+            //         if (rs !== false) {
+            //             self.hide();
+            //         }
+            //     }
+            // }, false);
             self.mask[0].addEventListener('tap', function () {
                 self.hide();
             }, false);
