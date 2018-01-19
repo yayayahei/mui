@@ -278,7 +278,7 @@
         $.ready(function () {
 
             $.getJSON("../js/data.json?v=1", function (data) {
-                var city_picker = new $.MultiLevelPopPicker({layer: 3, titleWidthLayer: [20, 20, 55]});
+                var city_picker = new $.MultiLevelPopPicker({layer: 3, titleWidthLayer: [20, 20, 55],defaultTitles:['省份','城市','请选择']});
                 city_picker.setData(data.d);
 
                 document.getElementById('pop').onclick = function (ev) {

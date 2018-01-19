@@ -34,7 +34,7 @@
 		<div class="mui-poppicker-body">\
 		</div>\
 	</div>';
-    var titleBuffer = '<h5 data-id="title">请选择</h5>';
+    var titleBuffer = '<h5 data-id="title"></h5>';
     var pickerBuffer = '<div class="mui-ulpicker">\
 		<div class="mui-ulpicker-inner">\
 			<ul class="mui-ulpicker-list">\
@@ -98,6 +98,7 @@
             var self = this;
             var layer = self.options.layer || 1;
             var titleWidthLayer = self.options.titleWidthLayer;
+            var defaultTitles=self.options.defaultTitles||['请选择','请选择','请选择'];
             var width = '100%';
             self.pickers = [];
             self.titles = [];
@@ -108,7 +109,7 @@
                 pickerElement.style.width = width;
                 // append title
                 var titleElement = $.dom(titleBuffer)[0];
-                // console.log(titleElement);
+                titleElement.innerText = defaultTitles[i - 1];
                 titleElement.setAttribute("data-id", i);
                 if (titleWidthLayer) {
                     titleElement.style.width = titleWidthLayer[i - 1] + '%';
@@ -154,7 +155,7 @@
                     var preItem = eventData.item || {};
 
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text || "请选择";
+                    thisTitleElement.innerText = preItem.text||defaultTitles[id-1];
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
                     if (nextPickerElement && nextPickerElement.ulpicker) {
