@@ -518,42 +518,47 @@
         var startY = null;
         var isPicking = false;
         self.holder.addEventListener($.EVENT_START, function(event) {
-            console.log($.EVENT_START,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_START,event);
             // isPicking = true;
             // event.preventDefault();
             // self.list.style.webkitTransition = '';
-            startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            // startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
             // lastAngle = self.list.angle;
             // self.updateInertiaParams(event, true);
         }, false);
         self.holder.addEventListener($.EVENT_END, function(event) {
-            console.log($.EVENT_END,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_END,event);
             // isPicking = false;
-            event.preventDefault();
+            // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_CANCEL, function(event) {
-            // console.log($.EVENT_CANCEL,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_CANCEL,event);
             // isPicking = false;
             // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_MOVE, function(event) {
             // console.log($.EVENT_MOVE, event);
+            // return true;
+            // event.stopImmediatePropagation();
             // if (!isPicking) {
             //     return;
             // }
-            console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
+            // console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
 
-            var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-            var dragRange = endY - startY;
-            if(self.list.scrollTop===0&&dragRange>0){
-                console.log('prevent default');
-                event.preventDefault();
-            }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
-                console.log('prevent default');
-                event.preventDefault();
-            }
+            // var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            // var dragRange = endY - startY;
+            // if(self.list.scrollTop===0&&dragRange>0){
+            //     console.log('prevent default');
+            //     event.preventDefault();
+            // }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
+            //     console.log('prevent default');
+            //     event.preventDefault();
+            // }
             // event.preventDefault();
 
             // console.log(endY,  self.lastMoveStart);
@@ -1456,6 +1461,23 @@
 
 (function ($, document) {
 
+    var _blockScroll = function (event) {
+        console.log('prevent');
+        event.preventDefault();
+    };
+    window.Common={};
+    window.Common.TOP_stopBodyScroll=0;
+    window.Common.stopBodyScroll = function (isFixed) {
+        if (isFixed) {
+            window.Common.TOP_stopBodyScroll = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = -window.Common.TOP_stopBodyScroll + 'px'
+        } else {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            window.scrollTo(0, window.Common.TOP_stopBodyScroll)
+        }
+    };
     //创建 DOM
     $.dom = function (str) {
         if (typeof(str) !== 'string') {
@@ -1482,7 +1504,7 @@
 		<div class="mui-poppicker-body">\
 		</div>\
 	</div>';
-    var titleBuffer = '<h5 data-id="title">请选择</h5>';
+    var titleBuffer = '<h5 data-id="title"></h5>';
     var pickerBuffer = '<div class="mui-ulpicker">\
 		<div class="mui-ulpicker-inner">\
 			<ul class="mui-ulpicker-list">\
@@ -1522,23 +1544,26 @@
             }, false);
             self._createPicker();
             //防止滚动穿透
-            // self.panel.addEventListener($.EVENT_START, function (event) {
-            //     event.preventDefault();
-            // }, false);
+            self.panel.addEventListener($.EVENT_START, function (event) {
+                // event.stopImmediatePropagation();
+// event.preventDefault();
+            }, false);
             self.panel.addEventListener($.EVENT_MOVE, function (event) {
-                // 如果event puath 不包含pop picker body 则阻止
-                console.log('move in panel', event);
-                var bodyTags = event.path.some(function (value, index) {
-                    try {
-                        return value.classList.contains('mui-poppicker-body');
-                    } catch (e) {
-                        return false;
-                    }
-
-                });
-                if (!bodyTags) {
-                    event.preventDefault();
-                }
+                // event.stopImmediatePropagation();
+// event.preventDefault();
+                // 如果event path 不包含pop picker body 则阻止
+                // console.log('move in panel', event);
+                // var bodyTags = event.path.some(function (value, index) {
+                //     try {
+                //         return value.classList.contains('mui-poppicker-body');
+                //     } catch (e) {
+                //         return false;
+                //     }
+                //
+                // });
+                // if (!bodyTags) {
+                //     event.preventDefault();
+                // }
 
             }, false);
         },
@@ -1546,6 +1571,7 @@
             var self = this;
             var layer = self.options.layer || 1;
             var titleWidthLayer = self.options.titleWidthLayer;
+            var defaultTitles = self.options.defaultTitles || ['请选择', '请选择', '请选择'];
             var width = '100%';
             self.pickers = [];
             self.titles = [];
@@ -1556,7 +1582,7 @@
                 pickerElement.style.width = width;
                 // append title
                 var titleElement = $.dom(titleBuffer)[0];
-                // console.log(titleElement);
+                titleElement.innerText = defaultTitles[i - 1];
                 titleElement.setAttribute("data-id", i);
                 if (titleWidthLayer) {
                     titleElement.style.width = titleWidthLayer[i - 1] + '%';
@@ -1602,7 +1628,7 @@
                     var preItem = eventData.item || {};
 
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text || "请选择";
+                    thisTitleElement.innerText = preItem.text || defaultTitles[id - 1];
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
                     if (nextPickerElement && nextPickerElement.ulpicker) {
@@ -1647,13 +1673,15 @@
             }
             return items;
         },
+
         //显示
         show: function (callback) {
             var self = this;
             self.callback = callback;
             self.mask.show();
             document.body.classList.add($.className('poppicker-active-for-page'));
-            // document.classList.add($.className('poppicker-active-for-page'));
+            document.documentElement.classList.add($.className('poppicker-active-for-page'));
+            window.Common.stopBodyScroll(true);
             self.panel.classList.add($.className('active'));
             //处理物理返回键
             self.__back = $.back;
@@ -1661,6 +1689,7 @@
                 self.hide();
             };
         },
+
         //隐藏
         hide: function () {
             var self = this;
@@ -1668,7 +1697,9 @@
             self.panel.classList.remove($.className('active'));
             self.mask.close();
             document.body.classList.remove($.className('poppicker-active-for-page'));
-            // document.classList.remove($.className('poppicker-active-for-page'));
+            document.documentElement.classList.remove($.className('poppicker-active-for-page'));
+            window.Common.stopBodyScroll(false);
+
             //处理物理返回键
             $.back = self.__back;
         },
@@ -1681,7 +1712,6 @@
                     self[name] = null;
                     delete self[name];
                 }
-                ;
                 self.disposed = true;
             }, 300);
         }

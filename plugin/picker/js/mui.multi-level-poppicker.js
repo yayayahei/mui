@@ -8,6 +8,23 @@
 
 (function ($, document) {
 
+    var _blockScroll = function (event) {
+        console.log('prevent');
+        event.preventDefault();
+    };
+    window.Common={};
+    window.Common.TOP_stopBodyScroll=0;
+    window.Common.stopBodyScroll = function (isFixed) {
+        if (isFixed) {
+            window.Common.TOP_stopBodyScroll = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = -window.Common.TOP_stopBodyScroll + 'px'
+        } else {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            window.scrollTo(0, window.Common.TOP_stopBodyScroll)
+        }
+    };
     //创建 DOM
     $.dom = function (str) {
         if (typeof(str) !== 'string') {
@@ -74,23 +91,26 @@
             }, false);
             self._createPicker();
             //防止滚动穿透
-            // self.panel.addEventListener($.EVENT_START, function (event) {
-            //     event.preventDefault();
-            // }, false);
+            self.panel.addEventListener($.EVENT_START, function (event) {
+                // event.stopImmediatePropagation();
+// event.preventDefault();
+            }, false);
             self.panel.addEventListener($.EVENT_MOVE, function (event) {
-                // 如果event puath 不包含pop picker body 则阻止
-                console.log('move in panel', event);
-                var bodyTags = event.path.some(function (value, index) {
-                    try {
-                        return value.classList.contains('mui-poppicker-body');
-                    } catch (e) {
-                        return false;
-                    }
-
-                });
-                if (!bodyTags) {
-                    event.preventDefault();
-                }
+                // event.stopImmediatePropagation();
+// event.preventDefault();
+                // 如果event path 不包含pop picker body 则阻止
+                // console.log('move in panel', event);
+                // var bodyTags = event.path.some(function (value, index) {
+                //     try {
+                //         return value.classList.contains('mui-poppicker-body');
+                //     } catch (e) {
+                //         return false;
+                //     }
+                //
+                // });
+                // if (!bodyTags) {
+                //     event.preventDefault();
+                // }
 
             }, false);
         },
@@ -98,7 +118,7 @@
             var self = this;
             var layer = self.options.layer || 1;
             var titleWidthLayer = self.options.titleWidthLayer;
-            var defaultTitles=self.options.defaultTitles||['请选择','请选择','请选择'];
+            var defaultTitles = self.options.defaultTitles || ['请选择', '请选择', '请选择'];
             var width = '100%';
             self.pickers = [];
             self.titles = [];
@@ -155,7 +175,7 @@
                     var preItem = eventData.item || {};
 
                     var thisTitleElement = self.titles[id - 1];
-                    thisTitleElement.innerText = preItem.text||defaultTitles[id-1];
+                    thisTitleElement.innerText = preItem.text || defaultTitles[id - 1];
                     thisTitleElement.setAttribute('data-value', eventData.index);
                     var nextPickerElement = this.nextSibling;
                     if (nextPickerElement && nextPickerElement.ulpicker) {
@@ -200,13 +220,15 @@
             }
             return items;
         },
+
         //显示
         show: function (callback) {
             var self = this;
             self.callback = callback;
             self.mask.show();
             document.body.classList.add($.className('poppicker-active-for-page'));
-            // document.classList.add($.className('poppicker-active-for-page'));
+            document.documentElement.classList.add($.className('poppicker-active-for-page'));
+            window.Common.stopBodyScroll(true);
             self.panel.classList.add($.className('active'));
             //处理物理返回键
             self.__back = $.back;
@@ -214,6 +236,7 @@
                 self.hide();
             };
         },
+
         //隐藏
         hide: function () {
             var self = this;
@@ -221,7 +244,9 @@
             self.panel.classList.remove($.className('active'));
             self.mask.close();
             document.body.classList.remove($.className('poppicker-active-for-page'));
-            // document.classList.remove($.className('poppicker-active-for-page'));
+            document.documentElement.classList.remove($.className('poppicker-active-for-page'));
+            window.Common.stopBodyScroll(false);
+
             //处理物理返回键
             $.back = self.__back;
         },
@@ -234,7 +259,6 @@
                     self[name] = null;
                     delete self[name];
                 }
-                ;
                 self.disposed = true;
             }, 300);
         }

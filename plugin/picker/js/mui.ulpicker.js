@@ -129,42 +129,47 @@
         var startY = null;
         var isPicking = false;
         self.holder.addEventListener($.EVENT_START, function(event) {
-            console.log($.EVENT_START,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_START,event);
             // isPicking = true;
             // event.preventDefault();
             // self.list.style.webkitTransition = '';
-            startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            // startY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
             // lastAngle = self.list.angle;
             // self.updateInertiaParams(event, true);
         }, false);
         self.holder.addEventListener($.EVENT_END, function(event) {
-            console.log($.EVENT_END,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_END,event);
             // isPicking = false;
-            event.preventDefault();
+            // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_CANCEL, function(event) {
-            // console.log($.EVENT_CANCEL,event);
+            // event.stopImmediatePropagation();
+// console.log($.EVENT_CANCEL,event);
             // isPicking = false;
             // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
         self.holder.addEventListener($.EVENT_MOVE, function(event) {
             // console.log($.EVENT_MOVE, event);
+            // return true;
+            // event.stopImmediatePropagation();
             // if (!isPicking) {
             //     return;
             // }
-            console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
+            // console.log(self.list.scrollTop,self.list.scrollHeight,self.list.offsetHeight);
 
-            var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
-            var dragRange = endY - startY;
-            if(self.list.scrollTop===0&&dragRange>0){
-                console.log('prevent default');
-                event.preventDefault();
-            }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
-                console.log('prevent default');
-                event.preventDefault();
-            }
+            // var endY = (event.changedTouches ? event.changedTouches[0] : event).pageY;
+            // var dragRange = endY - startY;
+            // if(self.list.scrollTop===0&&dragRange>0){
+            //     console.log('prevent default');
+            //     event.preventDefault();
+            // }else if (self.list.scrollTop!==0&&self.list.scrollTop===self.list.scrollHeight-self.list.offsetHeight&&dragRange<0){
+            //     console.log('prevent default');
+            //     event.preventDefault();
+            // }
             // event.preventDefault();
 
             // console.log(endY,  self.lastMoveStart);
