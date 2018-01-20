@@ -211,6 +211,8 @@
                         }
                     }
                 }, false);
+
+                // const scroll = new BScroll(document.querySelector('.mui-ulpicker-inner'));
             }
         },
         //填充数据

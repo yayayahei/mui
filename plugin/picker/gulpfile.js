@@ -62,6 +62,7 @@ gulp.task('build', ["clear_picker"], function () {
         "./js/mui.poppicker.js",
         "./js/mui.dtpicker.js",
         "./js/mui.multi-level-poppicker.js",
+        "./node_modules/better-scroll/dist/bscroll.js",
     ])
         .pipe(concat("mui.picker.all.js"))
         //.pipe(header(picker_banner))
