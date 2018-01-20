@@ -36,10 +36,15 @@ gulp.task('clear_picker', function (cb) {
 });
 
 gulp.task('build', ["clear_picker"], function () {
+    gulp.src([
+        './node_modules/font-awesome/fonts/*'
+    ])
+        .pipe(gulp.dest('./dist/fonts'));
     //css
     gulp.src(["./css/mui.picker.css",
         "./css/mui.poppicker.css",
-        "./css/mui.dtpicker.css"
+        "./css/mui.dtpicker.css",
+        './node_modules/font-awesome/css/font-awesome.css'
     ])
         .pipe(concat("mui.picker.all.css"))
         //.pipe(header(picker_banner))

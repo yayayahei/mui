@@ -12,8 +12,8 @@
         console.log('prevent');
         event.preventDefault();
     };
-    window.Common={};
-    window.Common.TOP_stopBodyScroll=0;
+    window.Common = {};
+    window.Common.TOP_stopBodyScroll = 0;
     window.Common.stopBodyScroll = function (isFixed) {
         if (isFixed) {
             window.Common.TOP_stopBodyScroll = window.scrollY;
@@ -43,11 +43,13 @@
 
     var panelBuffer = '<div class="mui-poppicker">\
 		<div class="mui-poppicker-header">\
-		    <div><span class="mui-poppicker-header-text"></span></div>\
-		    <div class="mui-poppicker-btn-close"><span class="" style="font-size:16px;"></span></div>\
+		    <span class="mui-poppicker-header-text"></span>\
+		   <div class="mui-poppicker-btn-close"><span class=" icon fa fa-times " style="font-size: 16px;"></span></div>\
 		</div>\
-		<div class="mui-poppicker-title"></div>\
 		<div class="mui-poppicker-body">\
+		<div class="mui-poppicker-nav">\
+		<div class="mui-poppicker-title"></div>\
+		</div>\
 		</div>\
 	</div>';
     var titleBuffer = '<h5 data-id="title"></h5>';
@@ -64,7 +66,7 @@
         init: function (options) {
             var self = this;
             self.options = options || {};
-            self.options.panelTitle=self.options.panelTitle||'';
+            self.options.panelTitle = self.options.panelTitle || '';
             self.panel = $.dom(panelBuffer)[0];
             document.body.appendChild(self.panel);
             self.headerText = self.panel.querySelector('.mui-poppicker-header-text');
@@ -199,6 +201,14 @@
                             }
                         }
 
+                    }else if (eventData.index>-1){
+                        // 点击最后一级
+                        if (self.callback) {
+                            var rs = self.callback(self.getSelectedItems());
+                            if (rs !== false) {
+                                self.hide();
+                            }
+                        }
                     }
                 }, false);
             }
@@ -227,7 +237,7 @@
             self.mask.show();
             document.body.classList.add($.className('poppicker-active-for-page'));
             document.documentElement.classList.add($.className('poppicker-active-for-page'));
-            window.Common.stopBodyScroll(true);
+            // window.Common.stopBodyScroll(true);
             self.panel.classList.add($.className('active'));
             //处理物理返回键
             self.__back = $.back;
@@ -244,7 +254,7 @@
             self.mask.close();
             document.body.classList.remove($.className('poppicker-active-for-page'));
             document.documentElement.classList.remove($.className('poppicker-active-for-page'));
-            window.Common.stopBodyScroll(false);
+            // window.Common.stopBodyScroll(false);
 
             //处理物理返回键
             $.back = self.__back;
