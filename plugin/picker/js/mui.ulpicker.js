@@ -34,12 +34,19 @@
         var self = this;
         self.holder = holder;
         self.options = options || {};
+        self.bscroll=new BScroll(self.holder.querySelector('.wrapper'),{
+            tap:true,
+            bindToWrapper:true
+        });
         self.init();
         self.initInertiaParams();
         self.calcElementItemPostion(true);
         self.bindEvent();
     };
-
+    ULPicker.prototype.refreshBScroll = function () {
+        var self = this;
+        self.bscroll.refresh();
+    };
     ULPicker.prototype.findElementItems = function () {
         var self = this;
         self.elementItems = [].slice.call(self.holder.querySelectorAll('li'));
@@ -48,6 +55,9 @@
 
     ULPicker.prototype.init = function () {
         var self = this;
+
+
+
         self.list = self.holder.querySelector('ul');
         self.findElementItems();
         self.height = self.holder.offsetHeight;

@@ -55,9 +55,11 @@
     var titleBuffer = '<h5 data-id="title"></h5>';
     var pickerBuffer = '<div class="mui-ulpicker">\
 		<div class="mui-ulpicker-inner">\
-			<ul class="mui-ulpicker-list">\
-			</ul>\
-		</div>\
+            <div class="wrapper">\
+                <ul class="content mui-ulpicker-list">\
+                </ul>\
+            </div>\
+        </div>\
 	</div>';
 
     //定义弹出选择器类
@@ -148,6 +150,8 @@
                         if (_id + 1 === id) {
                             // active this title
                             self.pickerElements[_id].classList.add('active');
+                            self.pickers[_id].bscroll.refresh();
+                            self.pickers[_id].bscroll.scrollToElement('.choose');
                             // display corresponding picker,
                             self.titles[_id].classList.add('active');
 
@@ -190,7 +194,7 @@
                                     self.pickerElements[_id].classList.add('active');
                                     // display corresponding picker,
                                     self.titles[_id].classList.add('active');
-
+                                    self.pickers[_id].bscroll.refresh();
                                 } else {
                                     // deactive other picker
                                     self.pickerElements[_id].classList.remove('active');
