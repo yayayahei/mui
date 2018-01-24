@@ -58,12 +58,11 @@ gulp.task('build', ["clear_picker"], function () {
         .pipe(gulp.dest("./dist/img/"));
     //js
     gulp.src(["./js/mui.picker.js",
-        "./js/bscroll.js",
+        "./node_modules/better-scroll/dist/bscroll.min.js",
         "./js/mui.ulpicker.js",
         "./js/mui.poppicker.js",
         "./js/mui.dtpicker.js",
         "./js/mui.multi-level-poppicker.js",
-        // "./node_modules/better-scroll/dist/bscroll.js",
     ])
         .pipe(concat("mui.picker.all.js"))
         //.pipe(header(picker_banner))

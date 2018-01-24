@@ -55,9 +55,6 @@
 
     ULPicker.prototype.init = function () {
         var self = this;
-
-
-
         self.list = self.holder.querySelector('ul');
         self.findElementItems();
         self.height = self.holder.offsetHeight;
@@ -199,8 +196,8 @@
         }, false);
         // --
         self.list.addEventListener('tap', function (event) {
+            // console.log('tap list',event);
             elementItem = event.target;
-            // console.log(event.path[1].tagName);
 
             if (elementItem.tagName == 'LI') {
                 self.elementItems.forEach(
@@ -323,13 +320,15 @@
     };
 
     ULPicker.prototype.triggerChange = function (force) {
+        // console.log('trigger change');
         var self = this;
         setTimeout(function () {
             var index = self.getSelectedIndex();
             // console.log(index);
             var item = self.items[index];
             // console.log(item);
-            if ($.trigger && (index != self.lastIndex || force === true)) {
+            // if ($.trigger && (index != self.lastIndex || force === true)) {
+            if ($.trigger|| force === true) {
                 $.trigger(self.holder, 'change', {
                     "index": index,
                     "item": item
@@ -379,6 +378,7 @@
     };
 
     ULPicker.prototype.setSelectedIndex = function (index, duration, callback) {
+        // console.log('setSelectIndex');
         var self = this;
         self.index = index;
         // console.log(self.index);
