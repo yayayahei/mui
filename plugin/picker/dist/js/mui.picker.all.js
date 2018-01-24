@@ -1606,7 +1606,7 @@
                     var id = Number(this.getAttribute("data-id"));
                     var eventData = event.detail || {};
                     var preItem = eventData.item || {};
-                    console.log('choosed item:', event.detail.item,event);
+                    // console.log('choosed item:', event.detail.item,event);
 
                     var thisTitleElement = self.titles[id - 1];
                     thisTitleElement.innerText = preItem.text || defaultTitles[id - 1];
