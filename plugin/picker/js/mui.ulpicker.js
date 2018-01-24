@@ -34,19 +34,17 @@
         var self = this;
         self.holder = holder;
         self.options = options || {};
-        self.bscroll=new BScroll(self.holder.querySelector('.wrapper'),{
-            tap:true,
-            bindToWrapper:true
+        self.bscroll = new BScroll(self.holder.querySelector('.wrapper'), {
+            bindToWrapper: true,
+            // click: true,
+            // tap: true,
         });
         self.init();
         self.initInertiaParams();
         self.calcElementItemPostion(true);
         self.bindEvent();
     };
-    ULPicker.prototype.refreshBScroll = function () {
-        var self = this;
-        self.bscroll.refresh();
-    };
+
     ULPicker.prototype.findElementItems = function () {
         var self = this;
         self.elementItems = [].slice.call(self.holder.querySelectorAll('li'));
@@ -135,7 +133,7 @@
         var lastAngle = 0;
         var startY = null;
         var isPicking = false;
-        self.holder.addEventListener($.EVENT_START, function(event) {
+        self.holder.addEventListener($.EVENT_START, function (event) {
             // event.stopImmediatePropagation();
 // console.log($.EVENT_START,event);
             // isPicking = true;
@@ -145,21 +143,21 @@
             // lastAngle = self.list.angle;
             // self.updateInertiaParams(event, true);
         }, false);
-        self.holder.addEventListener($.EVENT_END, function(event) {
+        self.holder.addEventListener($.EVENT_END, function (event) {
             // event.stopImmediatePropagation();
 // console.log($.EVENT_END,event);
             // isPicking = false;
             // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
-        self.holder.addEventListener($.EVENT_CANCEL, function(event) {
+        self.holder.addEventListener($.EVENT_CANCEL, function (event) {
             // event.stopImmediatePropagation();
 // console.log($.EVENT_CANCEL,event);
             // isPicking = false;
             // event.preventDefault();
             // self.startInertiaScroll(event);
         }, false);
-        self.holder.addEventListener($.EVENT_MOVE, function(event) {
+        self.holder.addEventListener($.EVENT_MOVE, function (event) {
             // console.log($.EVENT_MOVE, event);
             // return true;
             // event.stopImmediatePropagation();
@@ -196,26 +194,28 @@
         }, false);
         // --
         self.list.addEventListener('tap', function (event) {
-            // console.log('tap list',event);
-            elementItem = event.target;
+            // console.log(event);
 
-            if (elementItem.tagName == 'LI') {
+            // alert(event.target.tagName + ',' + event.target.parentElement.tagName);
+
+            // alert(event.path[0].tagName)
+            // alert(event.target.tagName);
+            // alert(event.path.length);
+            // alert(event.path[1].tagName);
+            var elementItem = event.target.tagName === 'LI' ? event.target : event.target.parentElement;
+
+            // alert(elementItem);
+            // alert('tap');
+            if (elementItem) {
                 self.elementItems.forEach(
                     function (value) {
                         value.classList.remove('choose');
                     }
                 );
                 elementItem.classList.add('choose');
-                self.setSelectedIndex(self.elementItems.indexOf(elementItem), 200);
-            } else if (event.path[1].tagName == 'LI') {
-                self.elementItems.forEach(
-                    function (value) {
-                        value.classList.remove('choose');
-                    }
-                );
-                elementItem=event.path[1];
-                elementItem.classList.add('choose');
-                self.setSelectedIndex(self.elementItems.indexOf(elementItem), 200);
+                var index = self.elementItems.indexOf(elementItem);
+                // alert(index);
+                self.setSelectedIndex(index, 200);
             }
         }, false);
     };
@@ -237,8 +237,8 @@
         } else {
             var nowTime = event.timeStamp || Date.now();
             // if (nowTime - self.lastMoveTime > 300) {
-                self.lastMoveTime = nowTime;
-                self.lastMoveStart = point.pageY;
+            self.lastMoveTime = nowTime;
+            self.lastMoveStart = point.pageY;
             // }
         }
         self.stopInertiaMove = true;
@@ -256,7 +256,7 @@
         var deceleration = dir * 0.2 * -1;
         var duration = Math.abs(v / deceleration); // 速度消减至0所需时间
         var dist = v * duration / 2; //最终移动多少
-        self.list.scrollTop-=dist;
+        self.list.scrollTop -= dist;
 
         var startAngle = self.list.angle;
         var distAngle = self.calcAngle(dist) * dir;
@@ -328,7 +328,7 @@
             var item = self.items[index];
             // console.log(item);
             // if ($.trigger && (index != self.lastIndex || force === true)) {
-            if ($.trigger|| force === true) {
+            if ($.trigger || force === true) {
                 $.trigger(self.holder, 'change', {
                     "index": index,
                     "item": item

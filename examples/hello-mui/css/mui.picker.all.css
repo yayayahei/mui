@@ -188,22 +188,27 @@
     /*vertical-align: bottom;*/
 }
 .mui-poppicker-nav .mui-poppicker-title {
-    height: 25px;
-    line-height: 25px;
+    /*height: 30px;*/
+    /*line-height: 30px;*/
     position: absolute;
-    bottom: -3px;
-    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
 }
 .mui-poppicker-nav h5 {
+
     color: #ffffff;
     display: inline-block;
+    /*vertical-align: bottom;*/
     margin: 0;
-    height: 25px;
-    line-height: 20px;
+    height: 30px;
+    line-height: 30px;
     min-width: 60px;
     overflow: hidden;
     white-space: nowrap;
     padding: 0 8px;
+    padding-top: 3px;
     /*width: 30%;*/
     text-overflow: ellipsis;
 }
